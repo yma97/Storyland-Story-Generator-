@@ -47,7 +47,7 @@ class StoryGenerator:
         except Exception as e:
             return f"An error occurred while creating the prompt: {e}"
 
-    def generate_story(self, first_char_name, second_char_name, theme, main_storyline):
+    def generate_story(self, first_char_name, second_char_name, theme, main_storyline, max_token):
         """
         Generate a personalized story based on the given inputs.
 
@@ -67,8 +67,8 @@ class StoryGenerator:
                 model="deepseek-chat",
                 messages=[ {"role": "system", "content": "You are a creative storyteller who writes warm, engaging, healing stories."},
                         {"role": "user", "content": prompt}],
-                max_tokens=300,
-                temperature=0.7
+                max_tokens=max_token,
+                temperature=0.5
             )
             story = response.choices[0].message.content
             return story
