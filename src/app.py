@@ -3,8 +3,22 @@ from story_generator import StoryGenerator
 import os
 from dotenv import load_dotenv
 
-# Load environment
-load_dotenv()
+# Load API key from Streamlit secrets (when deployed) or .env (when local)
+try:
+    # Try Streamlit secrets first (for deployment)
+    api_key = st.secrets["DEEPSEEK_API_KEY"]
+    os.environ["DEEPSEEK_API_KEY"] = api_key
+except (KeyError, FileNotFoundError):
+    # Fall back to .env file (for local development)
+    from dotenv import load_dotenv
+    load_dotenv()
+    api_key = os.getenv("DEEPSEEK_API_KEY")
+
+# Verify API key exists
+if not api_key:
+    st.error("❌ DEEPSEEK_API_KEY not found!")
+    st.info("Please add your API key to Streamlit secrets or .env file")
+    st.stop()
 
 # Page config
 st.set_page_config(
